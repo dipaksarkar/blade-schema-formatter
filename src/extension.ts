@@ -10,7 +10,9 @@ export function activate(context: vscode.ExtensionContext) {
     "blade-schema-formatter.formatSchema",
     async () => {
       const editor = vscode.window.activeTextEditor;
-      if (!editor) return;
+      if (!editor) {
+        return;
+      }
 
       const edits = await formatSchemaBlocks(editor.document);
       if (edits.length > 0) {
@@ -52,8 +54,12 @@ async function formatSchemaBlocks(
     let arrayEndIndex = -1;
 
     for (let i = arrayStartIndex; i < text.length; i++) {
-      if (text[i] === "[") bracketCount++;
-      if (text[i] === "]") bracketCount--;
+      if (text[i] === "[") {
+        bracketCount++;
+      }
+      if (text[i] === "]") {
+        bracketCount--;
+      }
 
       if (bracketCount === 0) {
         arrayEndIndex = i;
@@ -74,6 +80,7 @@ async function formatSchemaBlocks(
           tabWidth: 4,
           printWidth: 80, // <--- 80 is the magic number for standard Laravel array styling
           trailingComma: "all",
+          singleQuote: true,
         });
 
         let cleanArray = formattedPhp
