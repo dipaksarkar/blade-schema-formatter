@@ -1,71 +1,30 @@
-# blade-schema-formatter README
+# Blade Schema Formatter
 
-This is the README for your extension "blade-schema-formatter". After writing up a brief description, we recommend including the following sections.
+A precision formatting tool for VS Code, designed specifically to handle massive, nested PHP arrays inside custom Laravel Blade directives.
+
+## The Problem
+
+Standard Blade formatters treat custom directives like `@schema(...)` as a single string expression. When passing large configuration arrays, formatters either ignore them entirely or aggressively squash them into a single, unreadable line.
+
+## The Solution
+
+This extension acts as a targeted formatting sniper. It uses a custom bracket-balancing algorithm to safely extract the array from your `@schema` block, passes it through Prettier's internal PHP engine with a strict line-width to force expansion, and safely injects the perfectly indented array back into your Blade file.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **Targeted Formatting:** Only touches `@schema` blocks, leaving your HTML and Tailwind classes to your primary formatter.
+- **Deep Expansion:** Forces nested arrays (`settings`, `options`, `blocks`) onto multiple lines for maximum readability.
+- **Parentheses Safe:** Uses bracket-counting instead of simple Regex, meaning text strings like `'label' => 'Standard (Glow)'` won't break the parser.
 
-For example if there is an image subfolder under your extension project workspace:
+## Usage
 
-\!\[feature X\]\(images/feature-x.png\)
+Because this is a targeted tool, you should not set it as your default Blade formatter. Instead, use it on-demand when working with your schema arrays:
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+1. Open your `.blade.php` file.
+2. Right-click anywhere in the editor.
+3. Select **Format Document With...**
+4. Choose **Blade Schema Formatter** from the dropdown menu.
 
 ## Requirements
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+- VS Code 1.105.0 or higher.
