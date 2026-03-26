@@ -19,7 +19,42 @@
         "command": "blade-schema-formatter.formatSchema",
         "title": "Format Blade Schema"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Blade Schema Formatter",
+      "properties": {
+        "bladeSchemaFormatter.tabWidth": {
+          "type": "number",
+          "default": 4,
+          "description": "Number of spaces per indentation level used when formatting the PHP array inside @schema(...)."
+        },
+        "bladeSchemaFormatter.printWidth": {
+          "type": "number",
+          "default": 80,
+          "description": "The line length where Prettier will try to wrap. Affects whether arrays are inlined or broken across lines."
+        },
+        "bladeSchemaFormatter.trailingComma": {
+          "type": "string",
+          "enum": [
+            "none",
+            "es5",
+            "all"
+          ],
+          "default": "all",
+          "description": "Trailing comma setting forwarded to Prettier when formatting the PHP array."
+        },
+        "bladeSchemaFormatter.singleQuote": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use single quotes for strings when formatting PHP arrays."
+        },
+        "bladeSchemaFormatter.enableOnSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable automatic formatting of @schema blocks on save for Blade files."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "yarn run compile",
