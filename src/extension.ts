@@ -1,29 +1,46 @@
 import * as vscode from "vscode";
 import * as prettier from "prettier";
-import prettierPluginPhp from "@prettier/plugin-php";
+import * as prettierPluginPhp from "@prettier/plugin-php";
 
 export function activate(context: vscode.ExtensionContext) {
-  console.log("Blade Schema Formatter (Save Hook) is now active!");
+  console.log("Blade Schema Formatter is active!");
 
-  // Listen for the moment BEFORE a document is saved
-  const saveListener = vscode.workspace.onWillSaveTextDocument((event) => {
-    // Only run on Blade files
+  // 1. MANUAL COMMAND (Cmd + Shift + P)
+  let disposableCommand = vscode.commands.registerCommand(
+    "blade-schema-formatter.formatSchema",
+    async () => {
+      const editor = vscode.window.activeTextEditor;
+      if (!editor) return;
+
+      const edits = await formatSchemaBlocks(editor.document);
+      if (edits.length > 0) {
+        const workspaceEdit = new vscode.WorkspaceEdit();
+        workspaceEdit.set(editor.document.uri, edits);
+        await vscode.workspace.applyEdit(workspaceEdit);
+        vscode.window.showInformationMessage("Schema Formatted!");
+      }
+    },
+  );
+
+  // 2. AUTO-FORMAT ON SAVE HOOK
+  // This runs invisibly in the background right before the file saves
+  let saveHook = vscode.workspace.onWillSaveTextDocument((event) => {
     if (event.document.languageId === "blade") {
-      // waitUntil tells VS Code to pause the save until our edits are applied
+      // event.waitUntil pauses the save until our array is formatted
       const promise = formatSchemaBlocks(event.document);
       event.waitUntil(promise);
     }
   });
 
-  context.subscriptions.push(saveListener);
+  context.subscriptions.push(disposableCommand, saveHook);
 }
 
+// The Formatting Engine
 async function formatSchemaBlocks(
   document: vscode.TextDocument,
 ): Promise<vscode.TextEdit[]> {
   const text = document.getText();
   const edits: vscode.TextEdit[] = [];
-
   const schemaStartRegex = /@schema\s*\(\s*\[/g;
   let match;
 
@@ -53,9 +70,9 @@ async function formatSchemaBlocks(
 
         const formattedPhp = await prettier.format(phpCode, {
           parser: "php",
-          plugins: [prettierPluginPhp],
+          plugins: [prettierPluginPhp as any],
           tabWidth: 4,
-          printWidth: 30, // Forces expansion
+          printWidth: 80, // <--- 80 is the magic number for standard Laravel array styling
           trailingComma: "all",
         });
 

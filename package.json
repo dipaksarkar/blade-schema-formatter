@@ -10,19 +10,14 @@
   "categories": [
     "Other"
   ],
+  "repository": {},
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "languages": [
+    "commands": [
       {
-        "id": "blade",
-        "aliases": [
-          "Blade",
-          "blade"
-        ],
-        "extensions": [
-          ".blade.php"
-        ]
+        "command": "blade-schema-formatter.formatSchema",
+        "title": "Format Blade Schema"
       }
     ]
   },
